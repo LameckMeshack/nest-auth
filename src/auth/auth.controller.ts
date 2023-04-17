@@ -5,9 +5,10 @@ import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
+import { AuthInterceptor } from './auth.interceptor';
 
 
-
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class AuthController {
     constructor(
@@ -55,7 +56,7 @@ export class AuthController {
     }
 
     //get loginuser
-    @UseInterceptors(ClassSerializerInterceptor)
+    @UseInterceptors(AuthInterceptor)
     @Get('user')
     async user(@Req() request: Request) {
         try {
@@ -69,8 +70,14 @@ export class AuthController {
         } catch (e) {
             return null;
         }
+    }
 
-
+    //logout
+    @UseInterceptors(AuthInterceptor)
+    @Post('logout')
+    async logout(@Res({ passthrough: true }) response: Response) {
+        response.clearCookie('jwt');
+        return { message: 'Success' };
     }
 }
 
