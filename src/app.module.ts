@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ResetModule } from './reset/reset.module';
+
 
 @Module({
-  imports: [AuthModule,
+  imports: [AuthModule, ResetModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -20,7 +22,8 @@ import { ConfigModule } from '@nestjs/config';
       entities: [],
       autoLoadEntities: true,
       synchronize: true,
-    }),],
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

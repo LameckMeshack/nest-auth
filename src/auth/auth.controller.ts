@@ -66,7 +66,6 @@ export class AuthController {
                 return null;
             }
             return await this.authService.findOneBy({ id: data['id'], });
-
         } catch (e) {
             return null;
         }
