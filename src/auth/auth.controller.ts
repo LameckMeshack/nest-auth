@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Get, Post, Req, Res, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegUserDto } from './dto/register.dto';
 import * as bcrypt from 'bcryptjs';
@@ -55,6 +55,7 @@ export class AuthController {
     }
 
     //get loginuser
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get('user')
     async user(@Req() request: Request) {
         try {
