@@ -1,10 +1,10 @@
-import { BadRequestException, Body, Controller, Post, Res } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegUserDto } from './dto/register.dto';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 
 
@@ -14,7 +14,7 @@ export class AuthController {
         private authService: AuthService,
         private readonly jwtService: JwtService,
     ) {
-        
+
     }
 
     @Post('register')
@@ -52,6 +52,24 @@ export class AuthController {
             response.cookie('jwt', jwt, { httpOnly: true });
             return user;
         }
+    }
+
+    //get loginuser
+    @Get('user')
+    async user(@Req() request: Request) {
+        try {
+            const cookie = request.cookies['jwt'];
+            const data = await this.jwtService.verifyAsync(cookie);
+            if (!data) {
+                return null;
+            }
+            return await this.authService.findOneBy({ id: data['id'], });
+
+        } catch (e) {
+            return null;
+        }
+
+
     }
 }
 
